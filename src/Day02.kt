@@ -18,7 +18,22 @@ fun main() {
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        val position = Position()
+        input.forEach { command ->
+            when (command.substringBefore(DELIMITER)) {
+                Commands.FORWARD.command -> {
+                    position.horizontal += command.movementValue()
+                    position.depth += command.movementValue() * position.aim
+                }
+                Commands.UP.command -> {
+                    position.aim -= command.movementValue()
+                }
+                Commands.DOWN.command -> {
+                    position.aim += command.movementValue()
+                }
+            }
+        }
+        return position.horizontal * position.depth
     }
 
 
@@ -29,7 +44,7 @@ fun main() {
 
 const val DELIMITER = " "
 
-data class Position(var horizontal: Int = 0, var depth: Int = 0)
+data class Position(var horizontal: Int = 0, var depth: Int = 0, var aim: Int = 0)
 
 enum class Commands(val command: String) {
     FORWARD("forward"),

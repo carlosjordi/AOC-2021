@@ -1,6 +1,7 @@
 import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
+import java.util.*
 
 /**
  * Reads lines from the given input txt file.
@@ -114,3 +115,37 @@ fun String.md5(): String = BigInteger(1, MessageDigest.getInstance("MD5").digest
  * Gets the value from the command line, so we know how much the submarine is moving
  */
 fun String.movementValue(): Int = substringAfter(DELIMITER).toInt()
+
+// Day06
+
+fun getLanternFishDaysLeft(input: List<String>): List<Int> {
+    return input[0].split(",").map(String::toInt)
+}
+
+/**
+ * Goes forward the amount of days provided in [days] param
+ *
+ * Returns the amount of lanternfish after those days
+ */
+fun List<Int>.advanceDays(days: Int): Long {
+    // ages of fish, all start at 0
+    val ages = (0..8).associateWith { 0L }.toMutableMap()
+    // filling with amount of each lanternFish
+    forEach { age ->
+        ages[age] = ages[age]!! + 1
+    }
+    // simulating days going on
+    for (d in 0 until days) {
+        val prevAge0 = ages[0]!!
+        ages[0] = ages[1]!!
+        ages[1] = ages[2]!!
+        ages[2] = ages[3]!!
+        ages[3] = ages[4]!!
+        ages[4] = ages[5]!!
+        ages[5] = ages[6]!!
+        ages[6] = ages[7]!! + prevAge0
+        ages[7] = ages[8]!!
+        ages[8] = prevAge0
+    }
+    return ages.values.sum()
+}
